@@ -1,53 +1,33 @@
-# Market Analyzer
+# Frontend - Market Analyzer
 
-Aplikasi analisa multi-aset: **Crypto, XAUUSD, Saham Indonesia, Saham US** —
-masing-masing dengan panel 10 indikator yang di-scoring menjadi satu
-**skor konfluensi** (Bullish / Netral / Bearish) plus rekomendasi SL/TP berbasis ATR.
+Dashboard statis (HTML/CSS/JS tanpa build step) untuk API FastAPI di `app/`.
 
-> Sinyal bersifat probabilistik, bukan jaminan. Lihat `backtest/` untuk
-> ekspektasi realistis (win rate 50-60% dengan manajemen risiko), bukan klaim akurasi tinggi.
+## Menjalankan
 
-## Struktur
-
-```
-app/
-  core/indicators/   # engine generik (trend, momentum, volatility, volume)
-  core/signals/      # confluence scorer + filter ADX
-  assets/            # crypto, gold, stocks_id, stocks_us (+ config YAML per aset)
-  api/               # FastAPI routes
-backtest/            # engine backtest (fee + slippage)
-tests/               # pytest, tanpa jaringan
-```
-
-## Quickstart
+Cukup serve folder ini secara statik, misalnya:
 
 ```bash
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env
-uvicorn app.main:app --reload
+cd frontend
+python -m http.server 5173
+# buka http://localhost:5173
 ```
 
-Contoh:
-```
-GET http://localhost:8000/analyze/crypto/BTCUSDT?timeframe=4h
-GET http://localhost:8000/analyze/stocks_id/BBCA.JK
-GET http://localhost:8000/screener/crypto?status_filter=strong_buy
-POST http://localhost:8000/backtest
-  {"asset_class": "crypto", "symbol": "BTCUSDT", "timeframe": "1d",
-   "fee_bps": 10, "slippage_bps": 5}
-```
+atau gunakan ekstensi Live Server di VS Code.
 
-Docker: `docker compose up --build`
+## Mode demo
 
-## Menambah aset baru
+Bila backend belum berjalan, UI otomatis memakai data demo (`js/demo.js`)
+sehingga semua tampilan bisa dieksplorasi. Indikator status API ada di header:
+hijau = API terhubung, kuning = mode demo.
 
-1. Buat folder `app/assets/<nama>/` + `indicators_config.yaml` (10 indikator + bobot).
-2. Subclass `BaseAsset`, implementasi `fetch_ohlcv()`.
-3. Daftarkan di `app/api/routes_analyze.py::ASSETS`.
+Arahkan backend dengan mengatur `window.API_BASE` sebelum `config.js` dimuat,
+atau edit default di `js/config.js`.
 
-## Catatan jujur
+## Fitur
 
-- `foreign_flow`, `rs_vs_index`, `funding_oi` (non-crypto) saat ini stub
-  netral — butuh data eksternal (CSV upload / futures API) di fase berikutnya.
-- Bobot indikator harus divalidasi lewat backtest walk-forward sebelum dipercaya.
+- **Analisa**: gauge skor konfluensi, status, SL/TP berbasis ATR, kerucut
+  prakiraan rentang (50/80/95%), panel 10 indikator dengan penjelasan edukatif.
+- **Screener**: pindai watchlist per kelas aset dengan filter status.
+- **Backtest**: jalankan engine backtest backend, tampilkan metrik utama.
+- **Mode gelap/terang**: ikut preferensi sistem, tersimpan di localStorage.
+- **Responsif**: layout satu kolom di ponsel, kontrol menyesuaikan layar kecil.
