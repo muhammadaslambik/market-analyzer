@@ -11,7 +11,10 @@
   document.querySelectorAll("#mainTabs .tab").forEach(t => {
     t.onclick = () => {
       document.querySelectorAll("#mainTabs .tab").forEach(x => x.classList.toggle("on", x === t));
-      ["analisa", "screener", "backtest"].forEach(v => \$("view-" + v).hidden = v !== t.dataset.view);
+      ["analisa", "screener", "backtest"].forEach(v => {
+        const el = \$("view-" + v);
+        if (el) el.hidden = v !== t.dataset.view;
+      });
     };
   });
 
@@ -23,50 +26,61 @@
       .map(([k, v]) => `<option value="${k}">${v.label}</option>`).join("");
   }
   fillAssets("selAsset"); fillAssets("scrAsset"); fillAssets("btAsset");
-  \$("btTf").innerHTML = '<option value="1d">1d</option><option value="4h">4h</option><option value="1h">1h</option>';
+  
+  const btTf = \$("btTf");
+  if (btTf) btTf.innerHTML = '<option value="1d">1d</option><option value="4h">4h</option><option value="1h">1h</option>';
 
-  // Menyesuaikan logika pemuatan Timeframe sesuai konfigurasi CONFIG
   function fillTf() {
-    \$("tfChips").innerHTML = CONFIG.ASSETS[curA].tfs
+    const tfChips = \$("tfChips");
+    if (!tfChips) return;
+    tfChips.innerHTML = CONFIG.ASSETS[curA].tfs
       .map(t => `<button class="chip ${t === curT ? "on" : ""}" data-t="${t}">${t}</button>`).join("");
-    document.querySelectorAll("#tfChips .chip").forEach(c => c.onclick = () => { curT = c.dataset.t; selCard = -1; \$("detail").hidden = true; load(); });
+    document.querySelectorAll("#tfChips .chip").forEach(c => {
+      c.onclick = () => { curT = c.dataset.t; selCard = -1; \$("detail").hidden = true; load(); };
+    });
   }
 
-  // Event saat user mengubah jenis Kelas Aset di dropdown utama
-  \$("selAsset").onchange = e => { 
-    curA = e.target.value; 
-    curS = CONFIG.ASSETS[curA].default || CONFIG.ASSETS[curA].syms[0]; 
-    curT = CONFIG.ASSETS[curA].tfs[Math.min(1, CONFIG.ASSETS[curA].tfs.length - 1)]; 
-    selCard = -1; 
-    \$("detail").hidden = true; 
-    
-    // Perbarui nilai pada kotak teks input pencarian baru
-    const inputField = \$("symbolInput");
-    if (inputField) inputField.value = curS;
-    
-    fillTf(); 
-    load(); 
-  };
+  const selAsset = \$("selAsset");
+  if (selAsset) {
+    selAsset.onchange = e => { 
+      curA = e.target.value; 
+      curS = CONFIG.ASSETS[curA].default || "BTCUSDT"; 
+      curT = CONFIG.ASSETS[curA].tfs[Math.min(1, CONFIG.ASSETS[curA].tfs.length - 1)]; 
+      selCard = -1; 
+      \$("detail").hidden = true; 
+      
+      const inputField = \$("symbolInput");
+      if (inputField) inputField.value = curS;
+      
+      fillTf(); 
+      load(); 
+    };
+  }
 
-  // Mengubah tombol Muat Ulang agar membaca teks dari Search Box
-  \$("btnRefresh").onclick = () => {
-    const inputField = \$("symbolInput");
-    if (inputField) {
-      let val = inputField.value.trim().toUpperCase();
-      // Proteksi otomatis: menambahkan akhiran .JK jika pengguna lupa mengetik bursa efek Indonesia
-      if (curA === 'stocks_id' && val && !val.endsWith('.JK')) {
-        val = val + '.JK';
-        inputField.value = val;
+  const btnRefresh = \$("btnRefresh");
+  if (btnRefresh) {
+    btnRefresh.onclick = () => {
+      const inputField = \$("symbolInput");
+      if (inputField) {
+        let val = inputField.value.trim().toUpperCase();
+        if (curA === 'stocks_id' && val && !val.endsWith('.JK')) {
+          val = val + '.JK';
+          inputField.value = val;
+        }
+        curS = val || CONFIG.ASSETS[curA].default;
       }
-      curS = val || CONFIG.ASSETS[curA].default;
-    }
-    load();
-  };
+      load();
+    };
+  }
 
   // ---------- analisa ----------
   async function load() {
-    const r = await Api.analyze(curA, curS, curT);
-    renderAnalysis(r);
+    try {
+      const r = await Api.analyze(curA, curS, curT);
+      renderAnalysis(r);
+    } catch (e) {
+      console.error("Gagal memuat analisis:", e);
+    }
   }
 
   function renderAnalysis(r) {
@@ -100,6 +114,7 @@
         <span class="badge ${cls}">${SIGNAL_LABEL[ind.signal]}</span></div>
         <div class="ind-meta"><span>${ind.category}</span><span class="num">bobot ${ind.weight}%</span></div></div>`;
     }).join("");
+    
     document.querySelectorAll(".ind-card").forEach(el => el.onclick = () => {
       const i = +el.dataset.i;
       selCard = selCard === i ? -1 : i;
@@ -123,46 +138,59 @@
       `<span><span class="dot-n">●</span> ${n} netral</span>` +
       `<span><span class="dot-r">●</span> ${br} bearish</span>` +
       `<span class="muted">konfluensi ${r.indicators.length} indikator${r.demo ? " - mode demo" : ""}</span>`;
-    void curT;
   }
 
-  ("dClose").onclick = () => selCard = -1; ("detail").hidden = true; document.querySelectorAll(".ind-card").forEach(c => c.classList.remove("sel")); };
+  const dClose = \$("dClose");
+  if (dClose) {
+    dClose.onclick = () => { 
+      selCard = -1; 
+      \$("detail").hidden = true; 
+      document.querySelectorAll(".ind-card").forEach(c => c.classList.remove("sel")); 
+    };
+  }
 
   // ---------- screener ----------
-  \$("btnScr").onclick = async () => {
-    const asset = ("scrAsset").value, filter = ("scrFilter").value;
-    const r = await Api.screener(asset, CONFIG.ASSETS[asset].tfs[0], filter);
-    const tb = document.querySelector("#scrTable tbody");
-    \$("scrEmpty").hidden = r.results.length > 0;
-    tb.innerHTML = r.results.map(x => `<tr>
-      <td>${x.symbol}</td><td class="num">${x.score > 0 ? "+" : ""}${x.score}</td>
-      <td><span class="badge ${x.status.includes("buy") && !x.status.includes("sell") ? "bull" : x.status === "wait" ? "neut" : "bear"}">${STATUS_LABEL[x.status]}</span></td>
-    </tr>`).join("");
-  };
+  const btnScr = \$("btnScr");
+  if (btnScr) {
+    btnScr.onclick = async () => {
+      const asset = \(("scrAsset").value, filter = \)("scrFilter").value;
+      const r = await Api.screener(asset, CONFIG.ASSETS[asset].tfs[0], filter);
+      const tb = document.querySelector("#scrTable tbody");
+      \$("scrEmpty").hidden = r.results.length > 0;
+      tb.innerHTML = r.results.map(x => `<tr>
+        <td>${x.symbol}</td><td class="num">${x.score > 0 ? "+" : ""}${x.score}</td>
+        <td><span class="badge ${x.status.includes("buy") && !x.status.includes("sell") ? "bull" : x.status === "wait" ? "neut" : "bear"}">${STATUS_LABEL[x.status]}</span></td>
+      </tr>`).join("");
+    };
+  }
 
   // ---------- backtest ----------
-  \$("btnBt").onclick = async () => {
-    \$("btStats").hidden = true;
-    const asset = \$("btAsset").value, sym = \(("btSymbol").value.trim() \vert{}\vert{} CONFIG.ASSETS[asset].syms[0], tf = \)("btTf").value;
-    const r = await Api.backtest(asset, sym, tf);
-    const pct = v => (v * 100).toFixed(1) + "%";
-    \$("btWin").textContent = pct(r.win_rate);
-    \$("btPF").textContent = r.profit_factor == null ? "-" : r.profit_factor.toFixed(2);
-    \$("btRet").textContent = pct(r.total_return);
-    \$("btBH").textContent = pct(r.buy_hold_return);
-    \$("btDD").textContent = pct(r.max_drawdown);
-    \$("btTr").textContent = r.trades;
-    \$("btStats").hidden = false;
-  };
+  const btnBt = \$("btnBt");
+  if (btnBt) {
+    btnBt.onclick = async () => {
+      \$("btStats").hidden = true;
+      const asset = \$("btAsset").value, sym = \(("btSymbol").value.trim() \vert{}\vert{} CONFIG.ASSETS[asset].default, tf = \)("btTf").value;
+      const r = await Api.backtest(asset, sym, tf);
+      const pct = v => (v * 100).toFixed(1) + "%";
+      \$("btWin").textContent = pct(r.win_rate);
+      \$("btPF").textContent = r.profit_factor == null ? "-" : r.profit_factor.toFixed(2);
+      \$("btRet").textContent = pct(r.total_return);
+      \$("btBH").textContent = pct(r.buy_hold_return);
+      \$("btDD").textContent = pct(r.max_drawdown);
+      \$("btTr").textContent = r.trades;
+      \$("btStats").hidden = false;
+    };
+  }
 
   // ---------- init ----------
   (async () => {
     const mode = await Api.ping();
     const dot = \$("apiDot");
-    dot.className = "api-dot " + (mode === "live" ? "on" : "demo");
-    dot.title = mode === "live" ? "API terhubung" : "API tidak terjangkau - mode demo";
+    if (dot) {
+      dot.className = "api-dot " + (mode === "live" ? "on" : "demo");
+      dot.title = mode === "live" ? "API terhubung" : "API tidak terjangkau - mode demo";
+    }
     
-    // Inisialisasi pengisian nilai awal dari kotak teks input pencarian baru
     const inputField = \$("symbolInput");
     if (inputField) inputField.value = CONFIG.ASSETS[curA].default || "BTCUSDT";
     
