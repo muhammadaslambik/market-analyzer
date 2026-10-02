@@ -1,0 +1,13 @@
+# Crypto confluence config (BTC/ETH/SOL-style 24/7 markets).
+timeframes: ["1h", "4h", "1d"]
+indicators:
+  - {name: ema_ribbon,        weight: 12, category: tren}
+  - {name: supertrend,        weight: 12, category: tren}
+  - {name: macd,              weight: 10, category: momentum}
+  - {name: rsi_divergence,    weight: 10, category: momentum}
+  - {name: bollinger,         weight: 8,  category: volatilitas}
+  - {name: vwap_signal,       weight: 10, category: volume}
+  - {name: cvd,               weight: 12, category: order flow}
+  - {name: funding_oi,        weight: 12, category: derivatif}
+  - {name: adx,               weight: 8,  category: filter}
+  - {name: volume_profile,    weight: 6,  category: volume}

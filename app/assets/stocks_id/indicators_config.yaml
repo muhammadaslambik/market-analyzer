@@ -1,0 +1,13 @@
+# IDX (LQ45-style) confluence config.
+timeframes: ["1d", "1wk"]
+indicators:
+  - {name: ema_ribbon,        weight: 12, category: tren}
+  - {name: macd,              weight: 10, category: momentum}
+  - {name: rsi_divergence,    weight: 10, category: momentum}
+  - {name: bollinger,         weight: 8,  category: volatilitas}
+  - {name: obv,               weight: 12, category: volume}
+  - {name: vwap_signal,       weight: 10, category: volume}
+  - {name: adx,               weight: 10, category: filter}
+  - {name: foreign_flow,      weight: 14, category: khas IHSG}
+  - {name: rs_vs_index,       weight: 14, category: stock picking}
+  - {name: volume_profile,    weight: 10, category: volume}

@@ -1,0 +1,13 @@
+# US stocks confluence config.
+timeframes: ["4h", "1d"]
+indicators:
+  - {name: ema_ribbon,        weight: 12, category: tren}
+  - {name: supertrend,        weight: 10, category: tren}
+  - {name: macd,              weight: 10, category: momentum}
+  - {name: rsi_divergence,    weight: 10, category: momentum}
+  - {name: bollinger,         weight: 8,  category: volatilitas}
+  - {name: obv,               weight: 12, category: volume}
+  - {name: vwap_signal,       weight: 12, category: volume}
+  - {name: adx,               weight: 8,  category: filter}
+  - {name: rs_vs_index,       weight: 14, category: stock picking}
+  - {name: volume_profile,    weight: 14, category: volume}

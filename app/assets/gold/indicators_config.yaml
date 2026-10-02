@@ -1,0 +1,13 @@
+# XAUUSD confluence config.
+timeframes: ["1h", "4h", "1d"]
+indicators:
+  - {name: ema_ribbon,        weight: 12, category: tren}
+  - {name: supertrend,        weight: 12, category: tren}
+  - {name: macd,              weight: 10, category: momentum}
+  - {name: rsi_divergence,    weight: 10, category: momentum}
+  - {name: bollinger,         weight: 10, category: volatilitas}
+  - {name: vwap_signal,       weight: 12, category: volume}
+  - {name: adx,               weight: 10, category: filter}
+  - {name: obv,               weight: 10, category: volume}
+  - {name: rs_vs_index,       weight: 12, category: makro}
+  - {name: foreign_flow,      weight: 2,  category: makro}
