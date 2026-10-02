@@ -1,0 +1,11 @@
+name: Keep Alive
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      # Ganti URL di bawah dengan URL Render Anda setelah deploy
+      - run: curl -s -o /dev/null https://CHANGE-ME.onrender.com/health

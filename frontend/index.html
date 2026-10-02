@@ -27,21 +27,8 @@
 <!-- ============ VIEW: ANALISA ============ -->
 <section id="view-analisa" class="view">
   <div class="controls card">
-    <!-- Pilihan Kelas Aset (Cukup Satu Saja) -->
     <select id="selAsset" aria-label="kelas aset"></select>
-    
-    <!-- Search Box Interaktif Hasil Modifikasi -->
-    <input type="text" id="symbolInput" list="marketAssetDatalist" placeholder="Ketik kode saham/koin... (misal: BBCA atau BTC)" class="input" style="padding: 0.5rem 0.75rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-card); color: var(--fg); min-width: 250px;">
-    <datalist id="marketAssetDatalist"></datalist>
-    
-    <!-- Pilihan Jangka Waktu (Timeframe) -->
-    <div class="chips" id="tfChips" role="group" aria-label="timeframe"></div>
-    
-    <!-- Tombol Eksekusi Utama (Wajib Ada) -->
-    <button class="btn" id="btnRefresh">Muat ulang</button>
-  </div>
-
-
+    <select id="selSymbol" aria-label="simbol"></select>
     <div class="chips" id="tfChips" role="group" aria-label="timeframe"></div>
     <button class="btn" id="btnRefresh">Muat ulang</button>
   </div>
