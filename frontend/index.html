@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Market analyzer</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="logo" aria-hidden="true"></span>
+    <span>Market analyzer</span>
+    <span class="api-dot" id="apiDot" title="status API"></span>
+  </div>
+  <div class="top-actions">
+    <button class="btn icon" id="themeToggle" aria-label="ganti tema"></button>
+  </div>
+</header>
+
+<nav class="tabs" id="mainTabs">
+  <button class="tab on" data-view="analisa">Analisa</button>
+  <button class="tab" data-view="screener">Screener</button>
+  <button class="tab" data-view="backtest">Backtest</button>
+</nav>
+
+<!-- ============ VIEW: ANALISA ============ -->
+<section id="view-analisa" class="view">
+  <div class="controls card">
+    <select id="selAsset" aria-label="kelas aset"></select>
+    <select id="selSymbol" aria-label="simbol"></select>
+    <div class="chips" id="tfChips" role="group" aria-label="timeframe"></div>
+    <button class="btn" id="btnRefresh">Muat ulang</button>
+  </div>
+
+  <div class="grid-main">
+    <div class="card panel">
+      <svg viewBox="0 0 200 118" class="gauge" aria-label="gauge skor konfluensi">
+        <path d="M 20 100 A 80 80 0 0 1 180 100" class="gauge-track"/>
+        <text x="14" y="114" class="g-tick">-100</text>
+        <text x="93" y="14" class="g-tick">0</text>
+        <text x="168" y="114" class="g-tick">+100</text>
+        <line id="needle" x1="100" y1="100" x2="100" y2="26" class="needle"/>
+        <circle id="dot" cx="100" cy="26" r="5" class="dot"/>
+        <text id="gScore" x="100" y="90" text-anchor="middle" class="g-score">0</text>
+        <text x="100" y="106" text-anchor="middle" class="g-label">skor konfluensi</text>
+      </svg>
+      <div class="row-between">
+        <div class="status" id="vStatus">—</div>
+        <div class="price num" id="vPrice">—</div>
+      </div>
+      <div class="row-between sltp">
+        <span class="muted">Stop loss</span><span class="num sl" id="vSL">—</span>
+      </div>
+      <div class="row-between sltp">
+        <span class="muted">Target</span><span class="num tp" id="vTP">—</span>
+      </div>
+      <div class="muted small" id="vATR"></div>
+
+      <div class="divider"></div>
+      <div class="muted small">Prakiraan rentang probabilitas</div>
+      <svg viewBox="0 0 300 150" class="cone" aria-label="kerucut prakiraan">
+        <path id="c95" class="cone-95"/>
+        <path id="c80" class="cone-80"/>
+        <path id="c50" class="cone-50"/>
+        <path id="cMed" class="cone-med"/>
+        <line id="cCur" class="cone-cur"/>
+        <text id="cCurT" class="c-tick"></text>
+      </svg>
+      <div class="row-between small" id="forecastNums"></div>
+      <div class="muted small" id="forecastNote"></div>
+    </div>
+
+    <div class="card panel">
+      <div class="row-between">
+        <span class="tag" id="vChartLab">—</span><span class="tag" id="vTfLab"></span>
+      </div>
+      <svg viewBox="0 0 600 150" class="spark" preserveAspectRatio="none">
+        <path id="spEma" class="sp-ema"/>
+        <path id="spPx" class="sp-px"/>
+      </svg>
+      <div class="legend small">
+        <span><i class="sw sw-line"></i> harga</span>
+        <span><i class="sw sw-ema"></i> EMA 20</span>
+      </div>
+
+      <div class="ind-head">Panel indikator <span class="muted">— klik kartu untuk penjelasan</span></div>
+      <div class="ind-grid" id="indGrid"></div>
+      <div class="tally" id="vTally"></div>
+      <div class="card detail" id="detail" hidden>
+        <div class="row-between">
+          <strong id="dName"></strong>
+          <button class="btn ghost" id="dClose">Tutup</button>
+        </div>
+        <div class="tag" id="dMeta"></div>
+        <p id="dWhy" class="why"></p>
+      </div>
+    </div>
+  </div>
+
+  <p class="disclaimer">Sinyal bersifat probabilistik, bukan jaminan hasil - bukan nasihat keuangan.
+  Prakiraan berupa rentang probabilitas; tidak ada model yang menjamin angka persis dengan harga pasar.</p>
+</section>
+
+<!-- ============ VIEW: SCREENER ============ -->
+<section id="view-screener" class="view" hidden>
+  <div class="controls card">
+    <select id="scrAsset" aria-label="kelas aset"></select>
+    <select id="scrFilter" aria-label="filter status">
+      <option value="">Semua status</option>
+      <option value="strong_buy">Strong buy</option>
+      <option value="buy">Buy</option>
+      <option value="wait">Wait</option>
+      <option value="sell">Sell</option>
+      <option value="strong_sell">Strong sell</option>
+    </select>
+    <button class="btn" id="btnScr">Pindai</button>
+  </div>
+  <div class="card table-wrap">
+    <table class="table" id="scrTable">
+      <thead><tr><th>Simbol</th><th>Skor</th><th>Status</th></tr></thead>
+      <tbody></tbody>
+    </table>
+    <div class="empty muted" id="scrEmpty" hidden>Belum ada hasil. Tekan "Pindai".</div>
+  </div>
+</section>
+
+<!-- ============ VIEW: BACKTEST ============ -->
+<section id="view-backtest" class="view" hidden>
+  <div class="controls card">
+    <select id="btAsset" aria-label="kelas aset"></select>
+    <input id="btSymbol" placeholder="simbol, mis. BTCUSDT" class="input">
+    <select id="btTf"></select>
+    <button class="btn" id="btnBt">Jalankan backtest</button>
+  </div>
+  <div class="stats" id="btStats" hidden>
+    <div class="card stat"><div class="tag">Win rate</div><div class="stat-v num" id="btWin">-</div></div>
+    <div class="card stat"><div class="tag">Profit factor</div><div class="stat-v num" id="btPF">-</div></div>
+    <div class="card stat"><div class="tag">Total return</div><div class="stat-v num" id="btRet">-</div></div>
+    <div class="card stat"><div class="tag">Buy &amp; hold</div><div class="stat-v num" id="btBH">-</div></div>
+    <div class="card stat"><div class="tag">Max drawdown</div><div class="stat-v num" id="btDD">-</div></div>
+    <div class="card stat"><div class="tag">Jumlah trade</div><div class="stat-v num" id="btTr">-</div></div>
+  </div>
+  <p class="disclaimer">Backtest memasukkan fee &amp; slippage. Hasil historis tidak menjamin hasil masa depan.</p>
+</section>
+
+<script src="js/config.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/demo.js"></script>
+<script src="js/api.js"></script>
+<script src="js/charts.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
