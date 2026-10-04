@@ -5,10 +5,12 @@ on:
     branches: [main]
     paths:
       - "pipeline/**"
+      - "db/**"
       - ".github/workflows/ci.yml"
   pull_request:
     paths:
       - "pipeline/**"
+      - "db/**"
       - ".github/workflows/ci.yml"
 
 jobs:
