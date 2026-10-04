@@ -1,0 +1,12 @@
+# Daftar simbol awal (boleh disesuaikan setelah probe sumber data di tugas 0.3).
+crypto:
+  - BTCUSDT
+  - ETHUSDT
+  - SOLUSDT
+  - XRPUSDT
+  - BNBUSDT
+  - ADAUSDT
+  - DOGEUSDT
+  - AVAXUSDT
+  - LINKUSDT
+  - LTCUSDT
