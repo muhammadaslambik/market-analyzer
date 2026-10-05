@@ -126,3 +126,29 @@ def test_satu_simbol_gagal_simbol_lain_tetap_jalan() -> None:
 def test_window_terlalu_kecil_ditolak() -> None:
     with pytest.raises(ValueError):
         _run(FakeSource(), FakeStore(), window_candles=1)
+
+
+def test_resume_always_lanjut_dari_candle_terakhir_walau_lebih_tua_dari_since() -> None:
+    later = T0 + timedelta(hours=500, minutes=30)
+    recent_since = {"1h": T0 + timedelta(hours=400)}
+
+    store_plain = FakeStore()
+    _run(FakeSource(), store_plain)  # riwayat sampai T0+249h
+    plain = FakeSource()
+    run_backfill(plain, store_plain, ["BTCUSDT"], ["1h"], recent_since, later, log=lambda _: None)
+    assert plain.calls[0][2] == T0 + timedelta(hours=400)  # perilaku lama: lompat ke since
+
+    store_always = FakeStore()
+    _run(FakeSource(), store_always)
+    always = FakeSource()
+    run_backfill(
+        always,
+        store_always,
+        ["BTCUSDT"],
+        ["1h"],
+        recent_since,
+        later,
+        resume_always=True,
+        log=lambda _: None,
+    )
+    assert always.calls[0][2] == T0 + timedelta(hours=249)

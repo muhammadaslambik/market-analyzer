@@ -84,12 +84,13 @@ def _backfill_series(
     full: bool,
     window_candles: int,
     report: SeriesReport,
+    resume_always: bool = False,
 ) -> None:
     interval = interval_of(timeframe)
     cursor = floor_to_interval(since, timeframe)
     if not full:
         last = store.get_max_ts(MARKET, symbol, timeframe)
-        if last is not None and last > cursor:
+        if last is not None and (resume_always or last > cursor):
             cursor = last  # lanjutkan; candle terakhir diambil ulang agar celah di batas terdeteksi
     window = interval * window_candles
     while cursor < now:
@@ -115,6 +116,7 @@ def run_backfill(
     now: datetime,
     *,
     full: bool = False,
+    resume_always: bool = False,
     window_candles: int = WINDOW_CANDLES,
     log: Callable[[str], None] = print,
 ) -> BackfillSummary:
@@ -136,6 +138,7 @@ def run_backfill(
                     full,
                     window_candles,
                     report,
+                    resume_always,
                 )
             except SourceBlockedError as exc:
                 report.error = f"diblokir: {exc}"

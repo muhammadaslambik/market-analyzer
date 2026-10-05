@@ -27,6 +27,10 @@ _INSERT_RUN = (
     "VALUES (%s, %s, %s, %s, %s, %s, %s)"
 )
 _MAX_TS = "SELECT max(ts) FROM candles WHERE market = %s AND symbol = %s AND timeframe = %s"
+_LATEST = (
+    "SELECT ts, close, source FROM candles "
+    "WHERE market = %s AND symbol = %s AND timeframe = %s ORDER BY ts DESC LIMIT 1"
+)
 
 
 def _chunks[T](items: Sequence[T], size: int) -> Iterator[Sequence[T]]:
@@ -53,6 +57,13 @@ class NeonStore:
     def get_max_ts(self, market: str, symbol: str, timeframe: str) -> datetime | None:
         row = self._conn.execute(_MAX_TS, (market, symbol, timeframe)).fetchone()
         return row[0] if row else None
+
+    def get_latest(
+        self, market: str, symbol: str, timeframe: str
+    ) -> tuple[datetime, float, str] | None:
+        """Candle terakhir: (waktu buka, harga close, sumber)."""
+        row = self._conn.execute(_LATEST, (market, symbol, timeframe)).fetchone()
+        return (row[0], float(row[1]), str(row[2])) if row else None
 
     def insert_candles(self, candles: Sequence[Candle]) -> int:
         """Tulis candle. Mengembalikan jumlah baris yang benar-benar baru."""

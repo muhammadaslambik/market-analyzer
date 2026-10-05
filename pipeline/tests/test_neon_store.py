@@ -98,3 +98,22 @@ def test_log_run_menulis_ingest_runs() -> None:
     sql, params = conn.calls[0]
     assert "ingest_runs" in sql and params == ("backfill", T0, T0, "ok", 10, 3, None)
     assert conn.commits == 1
+
+
+def test_get_latest() -> None:
+    class Conn(FakeConn):
+        def execute(self, sql, params=None):
+            self.calls.append((sql, params))
+            return FakeCursor(row=(T0, "64230.5", "binance-vision"))
+
+    assert NeonStore(Conn()).get_latest("crypto", "BTCUSDT", "1h") == (
+        T0,
+        64230.5,
+        "binance-vision",
+    )
+
+    class Empty(FakeConn):
+        def execute(self, sql, params=None):
+            return FakeCursor(row=None)
+
+    assert NeonStore(Empty()).get_latest("crypto", "BTCUSDT", "1h") is None
