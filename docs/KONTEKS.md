@@ -20,6 +20,6 @@ ATURAN KELUARAN
 - Di akhir, tulis daftar asumsi yang kamu buat.
 
 STATUS
-Selesai: kode lama diarsipkan ke legacy/ (tag v0-legacy); workflow Keep Alive dihapus; dokumen proyek (PRD, SPEC-FASE-0, AGENTS.md) ditambahkan; tugas 0.1 repo dan CI (ci hijau).
+Selesai: kode lama diarsipkan ke legacy/ (tag v0-legacy); workflow Keep Alive dihapus; dokumen proyek (PRD, SPEC-FASE-0, AGENTS.md) ditambahkan; 0.1 repo dan CI; 0.2 skema database (Neon dan D1 terpasang); 0.3 sumber data (utama binance-vision, cadangan OKX); 0.4 adaptor; 0.5 validator data.
 Keputusan: pipeline baru di pipeline/, skema di db/, UI baru nanti di web/. Folder frontend/ dan js/ lama dibiarkan di tempatnya (belum dipindah, menunggu cek Cloudflare Pages).
 Struktur repo: pipeline/src/analyzer/{sources,store,jobs}, db/{neon,d1}, legacy/ (kode lama), docs/, .github/workflows
