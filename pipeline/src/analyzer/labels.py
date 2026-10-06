@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 
+
 def compute_labels(df: pd.DataFrame, horizon: int) -> tuple[pd.Series, pd.Series]:
     """
     Menghitung realized return dan label biner arah pergerakan harga.
@@ -10,10 +11,10 @@ def compute_labels(df: pd.DataFrame, horizon: int) -> tuple[pd.Series, pd.Series
     # Menghitung return berdasarkan forward close price
     future_close = df["close"].shift(-horizon)
     realized_return = (future_close / df["close"]) - 1.0
-    
+
     # Label biner arah pergerakan harga
     labels = pd.Series(np.nan, index=df.index)
     labels[realized_return > 0] = 1.0
     labels[realized_return < 0] = 0.0
-    
+
     return realized_return, labels

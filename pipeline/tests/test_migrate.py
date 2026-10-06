@@ -31,12 +31,13 @@ def test_skema_neon_semua_idempoten() -> None:
     statements = split_statements(sql)
     assert len(statements) in [6, 11]
     assert all(
-    s.startswith("CREATE TABLE IF NOT EXISTS") or 
-    s.startswith("ALTER TABLE") or 
-    s.startswith("CREATE UNIQUE INDEX") or 
-    s.startswith("CREATE INDEX") 
-    for s in statements
-)
+        s.startswith("CREATE TABLE IF NOT EXISTS")
+        or s.startswith("ALTER TABLE")
+        or s.startswith("CREATE UNIQUE INDEX")
+        or s.startswith("CREATE INDEX")
+        for s in statements
+    )
+
 
 def test_load_env_file_tidak_menimpa(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     env = tmp_path / ".env"
