@@ -1,0 +1,8 @@
+name = "market-analyzer-api"
+main = "src/index.js"
+compatibility_date = "2026-10-06"
+
+[[d1_databases]]
+binding = "DB" # Nama binding yang dipanggil di kode env.DB
+database_name = "market-analyzer"
+database_id = "bee75418-2136-4789-b6c4-f891c88d5f0f"
