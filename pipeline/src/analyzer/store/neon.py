@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterator, Sequence
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import Any
 
 import psycopg
@@ -27,6 +27,10 @@ _INSERT_RUN = (
     "VALUES (%s, %s, %s, %s, %s, %s, %s)"
 )
 _MAX_TS = "SELECT max(ts) FROM candles WHERE market = %s AND symbol = %s AND timeframe = %s"
+_FETCH = (
+    "SELECT ts, open, high, low, close, volume, source FROM candles "
+    "WHERE market = %s AND symbol = %s AND timeframe = %s AND ts >= %s AND ts < %s ORDER BY ts"
+)
 _LATEST = (
     "SELECT ts, close, source FROM candles "
     "WHERE market = %s AND symbol = %s AND timeframe = %s ORDER BY ts DESC LIMIT 1"
@@ -64,6 +68,34 @@ class NeonStore:
         """Candle terakhir: (waktu buka, harga close, sumber)."""
         row = self._conn.execute(_LATEST, (market, symbol, timeframe)).fetchone()
         return (row[0], float(row[1]), str(row[2])) if row else None
+
+    def fetch_candles(
+        self,
+        market: str,
+        symbol: str,
+        timeframe: str,
+        start: datetime | None = None,
+        end: datetime | None = None,
+    ) -> list[Candle]:
+        """Baca candle dengan waktu buka dalam [start, end), terurut menaik."""
+        lower = start or datetime(1970, 1, 1, tzinfo=UTC)
+        upper = end or datetime(2100, 1, 1, tzinfo=UTC)
+        rows = self._conn.execute(_FETCH, (market, symbol, timeframe, lower, upper)).fetchall()
+        return [
+            Candle(
+                market=market,
+                symbol=symbol,
+                timeframe=timeframe,
+                ts=row[0].astimezone(UTC),
+                open=float(row[1]),
+                high=float(row[2]),
+                low=float(row[3]),
+                close=float(row[4]),
+                volume=float(row[5]),
+                source=str(row[6]),
+            )
+            for row in rows
+        ]
 
     def insert_candles(self, candles: Sequence[Candle]) -> int:
         """Tulis candle. Mengembalikan jumlah baris yang benar-benar baru."""
