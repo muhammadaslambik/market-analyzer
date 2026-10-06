@@ -61,7 +61,7 @@ def moving_block_bootstrap_bss(
     y_prob_model: np.ndarray,
     y_prob_ref: np.ndarray,
     horizon: int,
-    n_splits: int = 50,
+    n_splits: int = 10,
     seed: int = 42,
 ) -> tuple[float, float]:
     """
