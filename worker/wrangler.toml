@@ -1,5 +1,5 @@
 name = "market-analyzer-api"
-main = "src/index.js"
+main = "src/index.ts"
 compatibility_date = "2026-10-06"
 
 [[d1_databases]]

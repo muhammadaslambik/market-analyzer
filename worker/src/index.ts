@@ -1,9 +1,14 @@
+// Definisi tipe data untuk Environment D1 Cloudflare
+export interface Env {
+  DB: D1Database;
+}
+
 export default {
-  async fetch(request, env) {
+  async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
     const path = url.pathname;
 
-    // Set CORS headers agar UI frontend bisa mengakses API ini
+    // Headers CORS agar UI Frontend bisa memanggil API
     const corsHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, OPTIONS",
@@ -16,16 +21,15 @@ export default {
     }
 
     try {
-      // 1. Endpoint Check Kesehatan Sistem
+      // 1. Endpoint Cek Kesehatan Worker
       if (path === "/api/health") {
         return new Response(JSON.stringify({ status: "healthy", timestamp: new Date().toISOString() }), {
           headers: { ...corsHeaders, "Content-Type": "application/json" }
         });
       }
 
-      // 2. Endpoint Mengambil Data Ringkasan Performa (Track Record)
+      // 2. Endpoint Mengambil Data Track Record dari D1
       if (path === "/api/track-record") {
-        // Query langsung ke Cloudflare D1
         const { results } = await env.DB.prepare(
           "SELECT * FROM track_record ORDER BY symbol ASC, horizon ASC"
         ).all();
@@ -35,13 +39,13 @@ export default {
         });
       }
 
-      // 3. Endpoint Jika Rute Tidak Ditemukan
+      // 3. Rute Tidak Ditemukan
       return new Response(JSON.stringify({ error: "Endpoint tidak ditemukan" }), {
         status: 404,
         headers: { ...corsHeaders, "Content-Type": "application/json" }
       });
 
-    } catch (error) {
+    } catch (error: any) {
       return new Response(JSON.stringify({ error: error.message }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" }
