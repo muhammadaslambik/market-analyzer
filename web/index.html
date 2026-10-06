@@ -1,84 +1,174 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>📟 Market Analyzer — Track Record</title>
-    <script src="https://tailwindcss.com"></script>
-    <style>
-        body { background-color: #0b0c10; font-family: monospace; }
-        .neon-text { color: #66fcf1; }
-        .neon-border { border-color: #1f2833; }
-        .card-bg { background-color: #151a22; }
-    </style>
-</head>
-<body class="text-gray-300 min-h-screen p-6">
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Market Analyzer — Mockup</title>
+<style>
+:root{--bg:#f4f6f8;--sf:#fff;--sf2:#eef1f5;--bd:#dfe3e8;--tx:#13171d;--mt:#5a6472;--ac:#2563eb;--up:#0d8a4a;--dn:#c62828;--wn:#a35d00;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b0d10;--sf:#14171c;--sf2:#1b2027;--bd:#262b33;--tx:#e8ebef;--mt:#98a2b0;--ac:#5b9bff;--up:#35d07f;--dn:#ff6b6b;--wn:#f0b24a}}
+:root[data-theme="dark"]{--bg:#0b0d10;--sf:#14171c;--sf2:#1b2027;--bd:#262b33;--tx:#e8ebef;--mt:#98a2b0;--ac:#5b9bff;--up:#35d07f;--dn:#ff6b6b;--wn:#f0b24a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-variant-numeric:tabular-nums}
+.wrap{max-width:1100px;margin:0 auto;padding:12px}
+header{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.brand{font-weight:700;font-size:17px}
+.tools{display:flex;gap:6px}
+button,select,input{font:inherit;color:var(--tx);background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:7px 10px}
+button{cursor:pointer}
+button.on{background:var(--ac);border-color:var(--ac);color:#fff}
+.banner{background:var(--sf2);border:1px dashed var(--bd);color:var(--mt);border-radius:8px;padding:6px 10px;font-size:12px;margin-bottom:10px}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin-bottom:10px}
+.bar label{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--mt)}
+.seg{display:flex;gap:4px}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:12px}
+.card h3{margin:0 0 10px;font-size:13px;color:var(--mt);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+.g2{display:grid;grid-template-columns:320px 1fr;gap:12px}
+@media (max-width:780px){.g2{grid-template-columns:1fr}}
+.big{font-size:26px;font-weight:700}
+.up{color:var(--up)}.dn{color:var(--dn)}.mt{color:var(--mt)}
+.badge{display:inline-block;border:1px solid var(--bd);border-radius:99px;padding:2px 9px;font-size:12px;color:var(--wn);background:var(--sf2)}
+.row{display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px solid var(--bd)}
+.row:last-child{border:0}
+svg{width:100%;height:auto;display:block}
+.h{fill:none;stroke:var(--ac);stroke-width:2}.e{fill:none;stroke:var(--mt);stroke-width:1.5}.m{fill:none;stroke:var(--wn);stroke-width:1.5;stroke-dasharray:4 3}.b{fill:var(--ac);opacity:.18}
+.lg{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--mt);margin-top:6px}
+.cf{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;align-items:end;margin-top:10px}
+.cf label{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--mt)}
+.res{margin-top:12px;background:var(--sf2);border-radius:10px;padding:12px}
+.err{color:var(--dn)}
+.ind{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.ic{border:1px solid var(--bd);border-radius:10px;padding:8px 10px;background:var(--sf2)}
+.ic b{display:block;font-size:13px}
+.sc{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:420px}
+th,td{text-align:right;padding:6px 8px;border-bottom:1px solid var(--bd)}
+th:first-child,td:first-child{text-align:left}
+th{color:var(--mt);font-weight:600;font-size:12px}
+.k{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.k div{background:var(--sf2);border-radius:10px;padding:10px}
+.k b{display:block;font-size:18px}
+footer{color:var(--mt);font-size:12px;padding:6px 0 14px}
+</style></head>
+<body><div class="wrap">
+<header><div class="brand">📈 Market Analyzer</div>
+<div class="tools"><button id="lang" aria-label="Language"></button><button id="theme" aria-label="Theme"></button></div></header>
+<div class="banner" data-i="demo"></div>
 
-    <!-- Header Section -->
-    <header class="max-w-7xl mx-auto mb-8 border-b neon-border pb-4">
-        <h1 class="text-3xl font-bold neon-text tracking-wider">📟 MINI BLOOMBERG — TRACK RECORD</h1>
-        <p class="text-sm text-gray-500 mt-1">Evaluasi Statistik Kuantitatif & Validasi Model Secara Jujur</p>
-    </header>
+<div class="bar">
+<label><span data-i="market"></span><select id="mk"><option value="crypto" data-i="mk_crypto"></option><option value="xau" data-i="mk_xau"></option><option value="us" data-i="mk_us"></option><option value="id" data-i="mk_id"></option></select></label>
+<label><span data-i="symbol"></span><select id="sy"></select></label>
+<label><span>Timeframe</span><div class="seg" id="tfs"><button data-tf="1h">1h</button><button data-tf="4h" class="on">4h</button><button data-tf="1d">1d</button></div></label>
+<span class="mt" style="font-size:12px" data-i="status"></span>
+</div>
 
-    <!-- Main Content Leaderboard -->
-    <main class="max-w-7xl mx-auto">
-        <div class="card-bg rounded-lg border neon-border p-6 shadow-xl">
-            <h2 class="text-xl font-semibold neon-text mb-4">🏆 Papan Peringkat Akurasi Model</h2>
-            
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="border-b neon-border text-gray-400 text-sm">
-                            <th class="p-3">SERI</th>
-                            <th class="p-3">HORIZON</th>
-                            <th class="p-3">VERSI MODEL</th>
-                            <th class="p-3 text-center">N (SAMPEL)</th>
-                            <th class="p-3 text-center">BRIER SCORE</th>
-                            <th class="p-3 text-center">BSS (SKILL)</th>
-                            <th class="p-3 text-center">ECE (KALIBRASI)</th>
-                            <th class="p-3 text-center">STATUS</th>
-                        </tr>
-                    </thead>
-                    <tbody id="leaderboard-body">
-                        <!-- Data akan dimasukkan secara dinamis lewat JavaScript fetch API -->
-                        <tr class="border-b neon-border hover:bg-gray-800/30">
-                            <td class="p-3 font-bold text-white">BTCUSDT</td>
-                            <td class="p-3">4h</td>
-                            <td class="p-3 text-gray-400">confluence_v1</td>
-                            <td class="p-3 text-center">--</td>
-                            <td class="p-3 text-center font-semibold text-yellow-400">0.2100</td>
-                            <td class="p-3 text-center text-green-400">+0.0400</td>
-                            <td class="p-3 text-center text-red-400">0.0300</td>
-                            <td class="p-3 text-center">
-                                <span class="px-2 py-0.5 text-xs rounded bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">EKSPERIMENTAL</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </main>
+<div class="g2">
+<section class="card">
+<h3 data-i="outlook"></h3>
+<div class="big" id="bias"></div>
+<div style="margin:6px 0"><span class="badge" data-i="exp"></span></div>
+<div class="row"><span data-i="probUp"></span><b id="pup"></b></div>
+<div class="row"><span data-i="conf"></span><b data-i="low"></b></div>
+<div class="row"><span data-i="score"></span><b id="score"></b></div>
+<h3 style="margin-top:14px" data-i="levels"></h3>
+<div class="row"><span data-i="stop"></span><b class="dn" id="sl"></b></div>
+<div class="row"><span data-i="target"></span><b class="up" id="tp"></b></div>
+</section>
+<section class="card">
+<h3 data-i="chartT"></h3>
+<svg id="ch" viewBox="0 0 640 230" role="img" aria-label="chart"></svg>
+<div class="lg"><span><b style="color:var(--ac)">━</b> <span data-i="lgP"></span></span><span><b style="color:var(--mt)">━</b> EMA 20</span><span><b style="color:var(--wn)">╌</b> <span data-i="lgM"></span></span><span><b style="color:var(--ac);opacity:.4">▮</b> <span data-i="lgB"></span></span></div>
+</section>
+</div>
 
-    <!-- Footer Notice -->
-    <footer class="max-w-7xl mx-auto mt-8 text-center text-xs text-gray-600">
-        Hasil "tidak ada keunggulan terbukti" adalah hasil ilmiah yang sah. Dilarang memanipulasi ambang batas data.
-    </footer>
+<section class="card">
+<h3 data-i="custom"></h3>
+<div class="seg"><button id="m1" class="on" data-i="modeDate"></button><button id="m2" data-i="modeFrom"></button></div>
+<div class="cf">
+<label id="f1"><span data-i="tgtTime"></span><input type="datetime-local" id="dt"></label>
+<label id="f2" hidden><span data-i="amount"></span><input type="number" id="amt" min="1" step="1" value="3"></label>
+<label id="f3" hidden><span data-i="unit"></span><select id="unit"><option value="h" data-i="u_h"></option><option value="d" data-i="u_d" selected></option><option value="w" data-i="u_w"></option><option value="m" data-i="u_m"></option><option value="y" data-i="u_y"></option></select></label>
+<button class="on" id="go" data-i="calc"></button>
+</div>
+<div class="mt" style="font-size:12px;margin-top:6px"><span data-i="tzHint"></span>: <span id="tz"></span></div>
+<div class="res" id="res" hidden></div>
+</section>
 
-    <script>
-        // Logika JavaScript Fetch API untuk memuat data live dari Cloudflare Worker
-        async function fetchTrackRecord() {
-            try {
-                // Ganti URL dengan endpoint Cloudflare Worker Anda setelah di-deploy live
-                const response = await fetch('/api/track-record');
-                const result = await response.json();
-                if (result.success) {
-                    console.log("Data berhasil dimuat dari D1:", result.data);
-                }
-            } catch (error) {
-                console.error("Gagal sinkronisasi data dengan Worker:", error);
-            }
-        }
-        window.onload = fetchTrackRecord;
-    </script>
-</body>
-</html>
+<section class="card"><h3 data-i="presets"></h3>
+<div class="sc"><table><thead><tr><th data-i="thH"></th><th>P(up)</th><th data-i="thMed"></th><th data-i="thRng"></th></tr></thead><tbody id="pt"></tbody></table></div></section>
+
+<section class="card"><h3 data-i="ind"></h3><div class="ind" id="ind"></div></section>
+
+<section class="card"><h3 data-i="track"></h3>
+<div class="k"><div><span class="mt" data-i="samples"></span><b>412</b></div><div><span class="mt" data-i="bss"></span><b>+0.8%</b></div><div><span class="mt" data-i="cov"></span><b>78%</b></div></div></section>
+
+<footer data-i="disc"></footer>
+</div>
+<script>
+const T={en:{demo:"Mockup · every number is simulated demo data, not a real forecast.",market:"Market",symbol:"Symbol",status:"Data updated 08:07 UTC · OK",mk_crypto:"Crypto",mk_xau:"Gold (XAUUSD)",mk_us:"US stocks",mk_id:"Indonesian stocks",outlook:"Outlook",bias:"Bullish bias",biasD:"Bearish bias",biasN:"No clear bias",exp:"Experimental · no proven edge yet",probUp:"Probability up",conf:"Confidence",low:"Low",score:"Confluence score",levels:"Reference levels (ATR-based)",stop:"Stop loss",target:"Target",chartT:"Price, EMA 20 and forecast range",lgP:"Price",lgM:"Median",lgB:"Range 10–90%",custom:"Custom prediction",modeDate:"Specific date & time",modeFrom:"From now",tgtTime:"Target date & time",amount:"Amount",unit:"Unit",u_h:"hours",u_d:"days",u_w:"weeks",u_m:"months",u_y:"years",calc:"Estimate",tzHint:"Times use your local timezone",r_t:"Target time",r_in:"Time ahead",r_med:"Median estimate",r_rng:"Range (10–90%)",r_p:"Probability above current price",e_past:"Please choose a time in the future.",e_far:"Maximum horizon is 1 year.",e_bad:"Enter a valid date or amount.",tA:"Short horizon",tB:"Medium horizon · noisier",tC:"Scenario, not a prediction",presets:"Preset horizons",thH:"Horizon",thMed:"Median",thRng:"Range 10–90%",ind:"Indicators (top 10 for this market)",w:"weight",bull:"Bull",bear:"Bear",neu:"Neutral",track:"Model track record (demo)",samples:"Samples",bss:"Brier skill vs baseline",cov:"Interval coverage (80% target)",disc:"Not financial advice. Probabilities are estimates and can be wrong."},
+id:{demo:"Mockup · semua angka adalah data demo simulasi, bukan prediksi nyata.",market:"Pasar",symbol:"Simbol",status:"Data diperbarui 08:07 UTC · OK",mk_crypto:"Crypto",mk_xau:"Emas (XAUUSD)",mk_us:"Saham AS",mk_id:"Saham Indonesia",outlook:"Ringkasan",bias:"Bias naik",biasD:"Bias turun",biasN:"Belum ada bias jelas",exp:"Eksperimental · belum ada keunggulan terbukti",probUp:"Peluang naik",conf:"Keyakinan",low:"Rendah",score:"Skor konfluensi",levels:"Level acuan (berbasis ATR)",stop:"Stop loss",target:"Target",chartT:"Harga, EMA 20 dan rentang prediksi",lgP:"Harga",lgM:"Median",lgB:"Rentang 10–90%",custom:"Prediksi kustom",modeDate:"Tanggal & jam tertentu",modeFrom:"Dari sekarang",tgtTime:"Tanggal & jam target",amount:"Jumlah",unit:"Satuan",u_h:"jam",u_d:"hari",u_w:"minggu",u_m:"bulan",u_y:"tahun",calc:"Perkirakan",tzHint:"Waktu memakai zona waktu lokal Anda",r_t:"Waktu target",r_in:"Jarak waktu",r_med:"Perkiraan median",r_rng:"Rentang (10–90%)",r_p:"Peluang di atas harga sekarang",e_past:"Pilih waktu di masa depan.",e_far:"Horizon maksimum 1 tahun.",e_bad:"Masukkan tanggal atau jumlah yang valid.",tA:"Horizon pendek",tB:"Horizon menengah · lebih berisik",tC:"Skenario, bukan prediksi",presets:"Horizon preset",thH:"Horizon",thMed:"Median",thRng:"Rentang 10–90%",ind:"Indikator (10 teratas untuk pasar ini)",w:"bobot",bull:"Naik",bear:"Turun",neu:"Netral",track:"Rekam jejak model (demo)",samples:"Sampel",bss:"Brier skill vs pembanding",cov:"Cakupan interval (target 80%)",disc:"Bukan nasihat keuangan. Peluang hanyalah perkiraan dan bisa meleset."}};
+const AB={en:{h:"h",d:"d",w:"w",m:"mo",y:"y"},id:{h:"j",d:"hr",w:"mg",m:"bln",y:"th"}};
+const U={h:1,d:24,w:168,m:720,y:8760};
+const M={crypto:{vol:.6,cur:"$",l:{BTCUSDT:64230,ETHUSDT:3150,SOLUSDT:142}},xau:{vol:.15,cur:"$",l:{XAUUSD:2650}},us:{vol:.25,cur:"$",l:{SPY:560,AAPL:228,NVDA:118}},id:{vol:.22,cur:"Rp ",l:{BBCA:9800,BBRI:4600,TLKM:3000}}};
+const IND=[["ema_ribbon",12],["supertrend",12],["macd",10],["rsi_divergence",10],["bollinger",8],["vwap_signal",10],["cvd",12],["funding_oi",12],["adx",8],["volume_profile",6]];
+const PRE=[[1,"h"],[4,"h"],[10,"h"],[1,"d"],[3,"d"],[1,"w"],[1,"m"],[3,"m"],[6,"m"],[1,"y"]];
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+let lang="en",tf="4h",mk="crypto",sym="BTCUSDT",cmode="date",last=null,cur={};
+try{lang=localStorage.getItem("ma_lang")||"en"}catch(e){}
+const tr=k=>T[lang][k]||k;
+function hash(s){let h=7;for(const c of s)h=(h*31+c.charCodeAt(0))>>>0;return h}
+function rng(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function erf(x){const s=Math.sign(x);x=Math.abs(x);const t=1/(1+.3275911*x);const p=((((1.061405429*t-1.453152027)*t+1.421413741)*t-.284496736)*t+.254829592)*t;return s*(1-p*Math.exp(-x*x))}
+const Phi=x=>.5*(1+erf(x/Math.SQRT2));
+const loc=()=>lang==="en"?"en-US":"id-ID";
+const fmt=v=>M[mk].cur+v.toLocaleString(loc(),{maximumFractionDigits:v<100?2:0});
+function calc(h){const sg=M[mk].vol,t=h/8760,sd=sg*Math.sqrt(t),mu=cur.score/100*.4,med=cur.P*Math.exp((mu-.5*sg*sg)*t),z=1.2816;return{med,lo:med*Math.exp(-z*sd),hi:med*Math.exp(z*sd),p:Phi((mu-.5*sg*sg)*t/sd)}}
+function dur(h){const a=AB[lang];if(h<48)return(Math.round(h*10)/10)+" "+a.h;if(h<1440)return(Math.round(h/24*10)/10)+" "+a.d;if(h<12000)return(Math.round(h/720*10)/10)+" "+a.m;return(Math.round(h/8760*10)/10)+" "+a.y}
+const tier=h=>h<=24?"tA":h<=168?"tB":"tC";
+const pct=p=>Math.round(p*100)+"%";
+
+function setTheme(t){document.documentElement.dataset.theme=t;$("#theme").textContent=t==="dark"?"☀️":"🌙";try{localStorage.setItem("ma_theme",t)}catch(e){}}
+function applyLang(){document.documentElement.lang=lang;$$("[data-i]").forEach(e=>e.textContent=tr(e.dataset.i));$("#lang").textContent=lang==="en"?"EN → ID":"ID → EN";try{localStorage.setItem("ma_lang",lang)}catch(e){}render();if(last)show(last.h,last.tgt)}
+
+function render(){
+ const m=M[mk],P=m.l[sym],h0=hash(sym),r=rng(h0+({"1h":1,"4h":2,"1d":3})[tf]);
+ const score=sym==="BTCUSDT"?34:(h0%70)-20;cur={P,score};
+ const th=({"1h":1,"4h":4,"1d":24})[tf],c=calc(th);
+ $("#bias").textContent=tr(score>10?"bias":score<-10?"biasD":"biasN");
+ $("#bias").className="big "+(score>10?"up":score<-10?"dn":"");
+ $("#pup").textContent=pct(c.p)+" ("+th+AB[lang].h+")";
+ $("#score").textContent=(score>0?"+":"")+score;
+ const atr=P*.0288;$("#sl").textContent=fmt(P-1.5*atr);$("#tp").textContent=fmt(P+2*atr);
+ // chart
+ const n=60,k=24,step=m.vol*Math.sqrt(th/8760);let s=[1];for(let i=1;i<n;i++)s.push(s[i-1]*Math.exp((r()-.5)*2*step*1.7+.0003));
+ const f=P/s[n-1];s=s.map(v=>v*f);
+ const ema=[];let e=s[0];s.forEach(v=>{e+=(v-e)*2/21;ema.push(e)});
+ const bandLo=[],bandHi=[],med=[];for(let j=1;j<=k;j++){const q=calc(th*j);bandLo.push(q.lo);bandHi.push(q.hi);med.push(q.med)}
+ const all=[...s,...ema,...bandLo,...bandHi],mn=Math.min(...all),mx=Math.max(...all),W=640,H=230,X=i=>i/(n+k-1)*W,Y=v=>H-8-(v-mn)/(mx-mn)*(H-16);
+ const line=(a,o)=>a.map((v,i)=>(i?"L":"M")+X(i+o).toFixed(1)+" "+Y(v).toFixed(1)).join("");
+ const band="M"+X(n-1)+" "+Y(P)+bandHi.map((v,i)=>"L"+X(n+i).toFixed(1)+" "+Y(v).toFixed(1)).join("")+bandLo.map((v,i)=>[v,i]).reverse().map(([v,i])=>"L"+X(n+i).toFixed(1)+" "+Y(v).toFixed(1)).join("")+"Z";
+ $("#ch").innerHTML=`<path class="b" d="${band}"/><path class="e" d="${line(ema,0)}"/><path class="h" d="${line(s,0)}"/><path class="m" d="M${X(n-1)} ${Y(P)}${med.map((v,i)=>"L"+X(n+i).toFixed(1)+" "+Y(v).toFixed(1)).join("")}"/>`;
+ // presets
+ $("#pt").innerHTML=PRE.map(([a,u])=>{const q=calc(a*U[u]);return`<tr><td>${a} ${AB[lang][u]}</td><td>${pct(q.p)}</td><td>${fmt(q.med)}</td><td>${fmt(q.lo)} – ${fmt(q.hi)}</td></tr>`}).join("");
+ // indicators
+ $("#ind").innerHTML=IND.map(([n,w],i)=>{const g=(h0+i*7)%3,t=g===0?["▲","bull","up"]:g===1?["▼","bear","dn"]:["●","neu","mt"];return`<div class="ic"><b>${n}</b><span class="${t[2]}">${t[0]} ${tr(t[1])}</span> <span class="mt">· ${tr("w")} ${w}%</span></div>`}).join("");
+ $("#tz").textContent=Intl.DateTimeFormat().resolvedOptions().timeZone;
+}
+function fillSy(){$("#sy").innerHTML=Object.keys(M[mk].l).map(x=>`<option>${x}</option>`).join("");sym=$("#sy").value}
+function err(k){last=null;const b=$("#res");b.hidden=false;b.innerHTML=`<span class="err">${tr(k)}</span>`}
+function show(h,tgt){const c=calc(h),t=tier(h);$("#res").hidden=false;$("#res").innerHTML=`<div class="row"><span>${tr("r_t")}</span><b>${tgt.toLocaleString(loc(),{dateStyle:"full",timeStyle:"short"})}</b></div><div class="row"><span>${tr("r_in")}</span><b>${dur(h)}</b></div><div class="row"><span>${tr("r_med")}</span><b class="big">${fmt(c.med)}</b></div><div class="row"><span>${tr("r_rng")}</span><b>${fmt(c.lo)} – ${fmt(c.hi)}</b></div><div class="row"><span>${tr("r_p")}</span><b>${pct(c.p)}</b></div><div style="margin-top:8px"><span class="badge">${tr(t)}</span> <span class="badge">${tr("exp")}</span></div>`}
+function est(){let h,tgt;if(cmode==="date"){const v=$("#dt").value;tgt=new Date(v);if(!v||isNaN(tgt))return err("e_bad");h=(tgt-Date.now())/36e5}else{const n=+$("#amt").value;if(!(n>0))return err("e_bad");h=n*U[$("#unit").value];tgt=new Date(Date.now()+h*36e5)}
+ if(h<=0)return err("e_past");if(h>8760)return err("e_far");last={h,tgt};show(h,tgt)}
+function mode(m){cmode=m;$("#m1").classList.toggle("on",m==="date");$("#m2").classList.toggle("on",m==="from");$("#f1").hidden=m!=="date";$("#f2").hidden=$("#f3").hidden=m==="date"}
+
+$("#lang").onclick=()=>{lang=lang==="en"?"id":"en";applyLang()};
+$("#theme").onclick=()=>setTheme(document.documentElement.dataset.theme==="dark"?"light":"dark");
+$("#mk").onchange=e=>{mk=e.target.value;fillSy();last=null;$("#res").hidden=true;render()};
+$("#sy").onchange=e=>{sym=e.target.value;last=null;$("#res").hidden=true;render()};
+$$("#tfs button").forEach(b=>b.onclick=()=>{tf=b.dataset.tf;$$("#tfs button").forEach(x=>x.classList.toggle("on",x===b));render()});
+$("#m1").onclick=()=>mode("date");$("#m2").onclick=()=>mode("from");$("#go").onclick=est;
+const d0=new Date(Date.now()+864e5);d0.setMinutes(0,0,0);const lz=d=>new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,16);
+$("#dt").value=lz(d0);$("#dt").min=lz(new Date());
+let th=null;try{th=localStorage.getItem("ma_theme")}catch(e){}
+setTheme(th||(matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light"));
+fillSy();applyLang();
+</script></body></html>
