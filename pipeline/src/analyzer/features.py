@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-from typing import Dict
 
 
 def calculate_ema(series: pd.Series, period: int) -> pd.Series:

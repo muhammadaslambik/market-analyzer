@@ -1,5 +1,5 @@
-import pytest
 import numpy as np
+
 from analyzer.metrics import (
     calculate_brier_score,
     calculate_brier_skill_score,

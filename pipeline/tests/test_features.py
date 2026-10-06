@@ -1,6 +1,6 @@
-import pytest
-import pandas as pd
 import numpy as np
+import pandas as pd
+
 from analyzer.features import compute_confluence_features
 
 

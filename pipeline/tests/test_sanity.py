@@ -1,16 +1,15 @@
-import pytest
 import numpy as np
 import pandas as pd
+
 from analyzer.evaluate import run_evaluation_pipeline
 
 
 def test_framework_sanity_on_random_walk():
-    """Kriteria 5.7: Pada data acak (random walk), model tidak boleh lolos status OK (harus eksperimental)."""
+    """Kriteria 5.7: Model acak wajib dinilai EKSPERIMENTAL."""
     np.random.seed(42)
     periods = 800
-    dates = pd.date_range(start="2026-01-01", periods=periods, freq="1h", tz="UTC")
+    dates = pd.date_range(start="2026-01-01", periods=periods, freq="h", tz="UTC")
 
-    # Hasilkan pergerakan harga acak murni
     random_returns = np.random.normal(0, 0.01, periods)
     price_series = 100.0 * np.exp(np.cumsum(random_returns))
 
@@ -26,6 +25,4 @@ def test_framework_sanity_on_random_walk():
     )
 
     report = run_evaluation_pipeline(df, symbol="RANDOM", timeframe="1h", horizon=4)
-
-    # Kerangka pengujian harus jujur dan melabelinya sebagai EKSPERIMENTAL
     assert "EKSPERIMENTAL" in report
