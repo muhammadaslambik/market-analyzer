@@ -26,8 +26,10 @@ dev = [
 where = ["src"]
 
 [tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-ra -q"
 testpaths = ["tests"]
-addopts = "-q"
+norecursedirs = ["legacy", ".venv", "build", "dist"]
 
 [tool.ruff]
 line-length = 100
