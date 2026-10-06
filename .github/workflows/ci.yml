@@ -28,4 +28,7 @@ jobs:
       - run: pip install -e ".[dev]"
       - run: ruff check .
       - run: ruff format --check .
-      - run: pytest
+      - name: Run Tests with Database Secret
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: pytest
