@@ -42,3 +42,9 @@ CREATE TABLE IF NOT EXISTS latest_indicators (
   asof      TEXT,
   PRIMARY KEY (market, symbol, timeframe, indicator)
 );
+CREATE TABLE IF NOT EXISTS track_record (
+  market TEXT, symbol TEXT, horizon TEXT, model_version TEXT,
+  n INTEGER, brier REAL, bss REAL, ece REAL,
+  hit_rate REAL, hit_lo REAL, hit_hi REAL, coverage REAL, updated_at TEXT,
+  PRIMARY KEY (market, symbol, horizon, model_version)
+);

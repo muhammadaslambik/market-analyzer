@@ -69,3 +69,9 @@ CREATE TABLE IF NOT EXISTS model_runs (
   passed_gate  boolean,
   created_at   timestamptz DEFAULT now()
 );
+ALTER TABLE model_runs ADD COLUMN IF NOT EXISTS symbol text;
+ALTER TABLE model_runs ADD COLUMN IF NOT EXISTS timeframe text;
+ALTER TABLE model_runs ADD COLUMN IF NOT EXISTS artifact jsonb;
+CREATE UNIQUE INDEX IF NOT EXISTS predictions_uniq
+  ON predictions (market, symbol, horizon, issued_at, model_version);
+CREATE INDEX IF NOT EXISTS predictions_due ON predictions (due_at);
