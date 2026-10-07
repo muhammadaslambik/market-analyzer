@@ -1,8 +1,8 @@
 name: forecast-daily
 
 on:
-  schedule:
-    - cron: '20 0 * * *' # Berjalan setiap hari pukul 00:20 UTC
+#   schedule:
+#     - cron: '20 0 * * *' # Berjalan setiap hari pukul 00:20 UTC
   workflow_dispatch: # Pemicu manual via tombol UI GitHub
 
 jobs:

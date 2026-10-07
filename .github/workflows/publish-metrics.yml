@@ -1,8 +1,8 @@
 name: publish-metrics
 
 on:
-  schedule:
-    - cron: '45 */6 * * *' # Berjalan setiap 6 jam sekali pada menit ke-45
+#   schedule:
+#     - cron: '45 */6 * * *' # Berjalan setiap 6 jam sekali pada menit ke-45
   workflow_dispatch:
 
 jobs:

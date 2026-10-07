@@ -1,8 +1,8 @@
 name: forecast-hourly
 
 on:
-  schedule:
-    - cron: '15 * * * *' # Berjalan setiap jam pada menit ke-15
+#   schedule:
+#     - cron: '15 * * * *' # Berjalan setiap jam pada menit ke-15
   workflow_dispatch: # Memungkinkan eksekusi manual via tombol UI GitHub
 
 jobs:
