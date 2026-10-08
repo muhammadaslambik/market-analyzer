@@ -27,3 +27,21 @@
 - Data turunan (funding rate, open interest) untuk indikator crypto di Fase 2. Endpoint futures Binance (`fapi.binance.com`) kemungkinan juga diblokir dari IP AS. Uji dari runner sebelum merancang indikator itu.
 - Batas laju resmi `binance-vision`. Adaptor memakai batas konservatif (2 permintaan per detik), bukan angka resmi.
 - Status `data-api.binance.vision` bisa berubah sewaktu-waktu. Itu alasan adanya sumber cadangan.
+## 2026-10-08 — Tugas 1.7 selesai
+
+**Status:** SELESAI.
+
+**Bukti**
+- `python -m pytest` → 181 passed, 0 gagal.
+- `python -m ruff check .` → All checks passed!; `ruff format --check .` → 57 files already formatted.
+- CI hijau: run #20 (commit 091a827, kode 1.7 final + marker verifikasi, pytest + ruff
+  dengan DATABASE_URL nyata) dan run #15 (kode identik sebelumnya).
+- `git diff origin/main` → kosong sebelum push marker.
+
+**Deviasi**
+- Paket zip tugas-1.7 tidak ditemukan di disk; terkonfirmasi sudah terpasang dan
+  di-push (f469601) sebelum sesi ini. Deviasi prosedural, tanpa dampak teknis.
+- Uji mutasi dilakukan dalam paket 1.7 sebelumnya; belum ditunjukkan ulang di sesi ini
+  (dapat diminta saat pemeriksaan C.6).
+
+**Dampak:** prasyarat Fase 1 terpenuhi; lanjut ke tugas 1.8 (evaluasi nyata 8 seri).

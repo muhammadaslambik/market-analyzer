@@ -9,7 +9,7 @@
 | Tahap | Status | Yang kurang | Bukti | Tanggal |
 |---|---|---|---|---|
 | Fase 0: pipeline crypto | Hampir tutup | Bukti 48 jam: ≥95% ingest_runs ok | [query + output] | |
-| Fase 1 / tugas 1.7 | Paket ada, belum dipasang | Pasang, uji, commit, CI hijau | [CI run URL] | |
+| Fase 1 / tugas 1.7 | Selesai | - | pytest 181 passed; ruff bersih; CI hijau run #20 (commit 091a827) | 2026-10-08 |
 | Fase 1 / tugas 1.8 | Belum | Evaluasi 8 seri + catat di DECISIONS.md | | |
 | Fase 1 / tugas 1.3 | 3 indikator aktif | MACD, Bollinger, RSI, VWAP + tes kausalitas | | |
 | Fase 1 / tugas 1.9 | Rusak, workflow mati | Tulis ulang forecast + kalibrator + publish | | |
