@@ -8,7 +8,7 @@
 
 | Tahap | Status | Yang kurang | Bukti | Tanggal |
 |---|---|---|---|---|
-| Fase 0: pipeline crypto | Hampir tutup | Bukti 48 jam: ≥95% ingest_runs ok | [query + output] | |
+| Fase 0: pipeline crypto | **Selesai** | - | Tabel `ingest_runs` 48 jam: 10/10 run ok = 100% >= 95%; GitHub Actions 10 run hijau, semua pemicu "Scheduled"; jumlah GitHub = jumlah DB. Deviasi: cadence aktual 5-8 jam (throttle GitHub Actions, bukan bug) | 2026-10-08 |
 | Fase 1 / tugas 1.7 | Selesai | - | pytest 181 passed; ruff bersih; CI hijau run #20 (commit 091a827) | 2026-10-08 |
 | Fase 1 / tugas 1.8 | Selesai | Keputusan cabang ditulis di DECISIONS.md | `python -m analyzer.evaluate --write-db`; laporan `docs/reports/eval-2026-10-08.md`; 16 kandidat (8 seri × confluence/momentum) semua status **eksperimental**; baris tercatat di `model_runs` | 2026-10-08 |
 | Fase 1 / tugas 1.3 | 3 indikator aktif | MACD, Bollinger, RSI, VWAP + tes kausalitas | | |
@@ -38,7 +38,7 @@ JANGAN perluas ke pasar lain sebelum titik ini jelas.
 **Status: [KEPUTUSAN: (a) / (b) — dicatat di DECISIONS.md, tanggal, alasan]**
 
 ## Urutan kerja terkunci
-1. ~~Bukti 48 jam Fase 0 (satu query) → catat di KONTEKS.md~~ *(masih terbuka)*
+1. ~~Bukti 48 jam Fase 0 (satu query) → catat di KONTEKS.md~~ ✓ selesai 2026-10-08 (10/10 ok = 100%)
 2. ~~Pasang tugas-1.7, uji, commit, CI hijau~~ ✓ selesai 2026-10-08
 3. ~~Evaluasi nyata (1.8) → DECISIONS.md~~ ✓ evaluasi resmi selesai; keputusan cabang menunggu
 4. Pilih 1.3 atau 1.9 berdasarkan hasil
