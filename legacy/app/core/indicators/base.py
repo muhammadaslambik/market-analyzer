@@ -1,21 +1,20 @@
-"""Base types and the indicator registry.
-
-Every indicator takes an OHLCV DataFrame and returns a pandas Series of
-signals in {+1 (bullish), 0 (neutral), -1 (bearish)}, one per row.
-"""
+"""Base types and the indicator registry."""
 
 from __future__ import annotations
+
+from collections.abc import Callable
 
 import pandas as pd
 
 BULL, NEUTRAL, BEAR = 1, 0, -1
 
-# name -> callable(df) -> Series[int]; filled in by submodules and registered here
-REGISTRY: dict[str, callable] = {}
+REGISTRY: dict[str, Callable[[pd.DataFrame], pd.Series]] = {}
 
 
-def register(name: str):
-    def deco(fn):
+def register(name: str) -> Callable:
+    def deco(fn: Callable[[pd.DataFrame], pd.Series]):
+        if name in REGISTRY:
+            raise ValueError(f"Indicator '{name}' sudah terdaftar")
         REGISTRY[name] = fn
         return fn
     return deco

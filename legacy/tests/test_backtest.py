@@ -12,7 +12,7 @@ def _df() -> pd.DataFrame:
     n = 400
     t = np.arange(n)
     cyc = 100 + 8 * np.sin(t / 12) + t * 0.03
-    close = cyc + rng.normal(0, 0.7, n).cumsum() * 0.1
+    close = pd.Series(cyc + rng.normal(0, 0.7, n).cumsum() * 0.1)
     sp = close.diff().abs().clip(0.2, 2.5) + 0.4
     return pd.DataFrame({"open": close - sp / 2, "high": close + sp / 2,
                          "low": close - sp / 2, "close": close,
