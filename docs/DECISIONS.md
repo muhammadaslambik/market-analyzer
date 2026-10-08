@@ -92,3 +92,49 @@
   berlabel selain eksperimental (tugas 1.10 wajib menampilkan label ini).
 - Run resmi `--write-db` sudah terpakai; run resmi berikutnya hanya setelah ada
   perubahan yang disetujui di ROADMAP (fitur baru Fase 2), bukan ulang atas hasil ini.
+
+## 2026-10-08 — Keputusan pemilik: framing (c), reposisi sebagai alat analisa berlapis
+
+**Status:** KEPUTUSAN BARU dari pemilik — menyempurnakan keputusan cabang (a) pada
+entri tugas 1.8 di atas. Entri (a) tetap sah sebagai keputusan teknis saat itu;
+entri ini menambah lapisan arah di atasnya, bukan membatalkannya.
+
+**Konteks**
+Pemilik menyatakan visi jangka panjang: alat analisa yang tangguh dengan
+**12 mesin analisa spesifik = 4 pasar (crypto, XAUUSD, saham AS, saham ID)
+× 3 gaya (scalping, swing, investasi)**, masing-masing dengan mesin indikator
+sendiri sesuai fokusnya, sebagai alat pertimbangan keputusan jual-beli nyata.
+
+**Keputusan: pilihan (c) — alat analisa berlapis**
+- **Lapisan 1 (aktif sekarang):** pipeline data + indikator + model, semuanya
+  berlabel **"eksperimental"** → dipakai sebagai alat analisa/pertimbangan.
+  Tidak pernah mengklaim prediksi.
+- **Lapisan 2 (bertahap):** 12 mesin spesifik. Setiap mesin hanya boleh
+  dipromosikan dari "eksperimental" ke "alat keputusan" setelah lolos
+  gate G1–G6 pada pasarnya sendiri.
+- **Hubungan dengan keputusan (a):** Fase 2 (perbaikan fitur/model) tetap jalan —
+  (c) memakai Fase 2 sebagai jalur menuju lapisan 2. Tidak ada perubahan rencana
+  teknis jangka pendek; yang berubah adalah framing tujuan akhir dan aturan
+  promosi per-mesin.
+
+**Urutan kerja terkunci (satu per satu, JANGAN paralel)**
+1. crypto-swing (data 1h/1d sudah ada, horizon 4h paling sehat per 1.8)
+2. crypto-scalp (butuh data menit — pipeline baru 1h/1d; butuh probe sumber baru)
+3. crypto-invest (butuh data fundamental crypto)
+4. XAUUSD-swing → 5. saham AS → 6. saham ID (butuh sumber data baru + fundamental)
+Ekspansi ke pasar lain **diblokir** sampai crypto-swing lolos G1–G6.
+
+**Konsekuensi**
+1. Semua output model tetap berlabel eksperimental (memperkuat batasan entri 1.8).
+2. Tugas berikutnya tetap 1.3 (indikator tambahan + tes kausalitas) sebagai
+   fondasi fitur lintas gaya, lalu 1.9.
+3. ROADMAP bagian "Titik keputusan" diperbarui: status (c), rujuk entri ini.
+4. Scalping dan investasi ditunda sampai fondasi data masing-masing tersedia —
+   scalping butuh candle menit/tick dan biaya transaksi; investasi butuh data
+   fundamental. Ini bukan pembatalan visi, hanya urutan yang jujur terhadap bukti.
+
+**Alasan**
+Bukti 1.8: infrastruktur sehat (G1/G5 lolos semua), tapi belum ada edge terukur
+(G2 gagal 16/16). Klaim "alat keputusan nyata" belum sah — namun infrastruktur
+terbukti layak dilanjutkan. (c) menampung visi 12 mesin tanpa melompati bukti:
+lapisan edukatif dipakai sekarang, promosi per-mesin hanya lewat gate.

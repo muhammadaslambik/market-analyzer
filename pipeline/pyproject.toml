@@ -29,7 +29,9 @@ where = ["src"]
 minversion = "8.0"
 addopts = "-ra -q"
 testpaths = ["tests"]
+pythonpath = ["src"]
 norecursedirs = ["legacy", ".venv", "build", "dist"]
+
 
 [tool.ruff]
 line-length = 100
