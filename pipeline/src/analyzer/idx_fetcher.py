@@ -23,13 +23,22 @@ class CacingParams:
 
 
 def fetch_ohlcv(ticker: str, period: str = "1y") -> pd.DataFrame:
-    """OHLCV harian .JK. Kolom standar: Open High Low Close Volume."""
+    """OHLCV harian .JK. Kolom lowercase: open high low close volume."""
     df = yf.Ticker(ticker).history(period=period, interval="1d")
     if df.empty:
         raise ValueError(f"tidak ada OHLCV untuk {ticker}")
-    df = df[["Open", "High", "Low", "Close", "Volume"]].copy()
+
+    # yfinance versi baru balikin kolom MultiIndex: ("Close", "BBCA.JK")
+    if isinstance(df.columns, pd.MultiIndex):
+        df.columns = df.columns.get_level_values(0)
+
+    # Normalisasi: semua kolom lowercase agar konsisten dengan build_features
+    df.columns = [str(c).lower() for c in df.columns]
+
+    df = df[["open", "high", "low", "close", "volume"]].copy()
     df.index = df.index.tz_localize(None)
     return df
+
 
 
 def fetch_fundamentals(ticker: str) -> dict:
@@ -87,6 +96,8 @@ def is_cacing_fundamental(fund: dict, p: CacingParams) -> tuple[bool, list[str]]
         reasons.append(f"net_income {ni:.0f} > 0")
 
     return (len(reasons) == 0, reasons)
+
+
 def get_fundamentals_cached(
     ticker: str, params: CacingParams, db_path: str
 ) -> tuple[bool, list[str], dict]:
