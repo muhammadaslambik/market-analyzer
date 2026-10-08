@@ -4,10 +4,14 @@ from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException
 
+from analyzer.idx_fetcher import CacingParams, get_fundamentals_cached
+
 from app.assets.crypto.service import CryptoAsset
 from app.assets.gold.service import GoldAsset
 from app.assets.stocks_id.service import StocksIDAsset
 from app.assets.stocks_us.service import StocksUSAsset
+from app.core.indicators.base import REGISTRY
+from app.api.routes_fundamental import CACING_PARAMS, DB_PATH
 from backtest.engine import run_backtest
 
 router = APIRouter()
@@ -34,9 +38,24 @@ def analyze(asset_class: str, symbol: str, timeframe: str | None = None, limit: 
     if tf not in svc.timeframes:
         raise HTTPException(400, f"timeframe must be one of {svc.timeframes}")
     try:
-        return svc.analyze(symbol, tf, limit)
+        result = svc.analyze(symbol, tf, limit)
     except Exception as exc:
         raise HTTPException(502, f"data fetch failed: {exc}")
+
+    # Gate fundamental hanya untuk saham IDX
+    if asset_class == "stocks_id":
+        try:
+            is_cacing, reasons, fund = get_fundamentals_cached(
+                symbol, CACING_PARAMS, DB_PATH
+            )
+            result["fundamental_gate"] = {"is_cacing": is_cacing, "reasons": reasons}
+            if is_cacing:
+                # shell stock: paksa status jadi WAIT — jangan recommend entry
+                result["status"] = "WAIT"
+                result["adx_filter_applied"] = True
+        except Exception as exc:
+            result["fundamental_gate"] = {"error": str(exc)}
+    return result
 
 
 @router.get("/screener/{asset_class}")
@@ -71,10 +90,8 @@ def backtest(payload: dict):
         df = svc.fetch_ohlcv(payload["symbol"], tf, int(payload.get("limit", 1000)))
     except Exception as exc:
         raise HTTPException(502, f"data fetch failed: {exc}")
-    indicators = {s["name"]: {"fn": __import__("app.core.indicators.base", fromlist=["REGISTRY"]).REGISTRY[s["name"]],
-                              "weight": float(s["weight"])}
-                  for s in svc.indicator_specs() if s["name"] in
-                  __import__("app.core.indicators.base", fromlist=["REGISTRY"]).REGISTRY}
+    indicators = {s["name"]: {"fn": REGISTRY[s["name"]], "weight": float(s["weight"])}
+                  for s in svc.indicator_specs() if s["name"] in REGISTRY}
     return run_backtest(df, indicators,
                         fee_bps=float(payload.get("fee_bps", 10)),
                         slippage_bps=float(payload.get("slippage_bps", 5)))

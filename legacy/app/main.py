@@ -5,11 +5,20 @@ Docs: http://localhost:8000/docs
 """
 
 import os
+import sys
+from pathlib import Path
+
+# supaya API bisa import modul pipeline (analyzer.*)
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "pipeline" / "src"))
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routes_analyze import router
+from app.api.routes_fundamental import router as fundamental_router
+
+# ... (bagian bawah file tetap sama, hanya tambah 1 baris include) ...
+
 
 # Origin frontend dipisah koma lewat env CORS_ORIGINS, e.g.:
 #   CORS_ORIGINS="https://market-analyzer.pages.dev,http://localhost:5173"
