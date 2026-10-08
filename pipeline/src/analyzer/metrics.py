@@ -78,3 +78,79 @@ def moving_block_bootstrap_bss(
     ci_upper = float(np.percentile(bss_distribution, 97.5))
 
     return ci_lower, ci_upper
+
+
+def expected_calibration_error_equal_count(
+    y_true: np.ndarray, y_prob: np.ndarray, n_bins: int = 10
+) -> float:
+    """ECE dengan bin berisi sama banyak (sesuai SPEC-FASE-1 Bagian 5.5)."""
+    n = len(y_true)
+    if n == 0:
+        return 0.0
+    order = np.argsort(y_prob, kind="stable")
+    ece = 0.0
+    for chunk in np.array_split(order, n_bins):
+        if len(chunk) == 0:
+            continue
+        ece += (len(chunk) / n) * abs(float(np.mean(y_true[chunk])) - float(np.mean(y_prob[chunk])))
+    return float(ece)
+
+
+def block_bootstrap_bss(
+    y_true: np.ndarray,
+    p_model: np.ndarray,
+    p_ref: np.ndarray,
+    block_length: int,
+    n_boot: int = 2000,
+    alpha: float = 0.05,
+    seed: int = 42,
+    batch: int = 250,
+) -> tuple[float, float]:
+    """Moving-block bootstrap untuk BSS.
+
+    Mengembalikan (batas bawah satu sisi pada tingkat `alpha`, batas atas pada `1 - alpha`).
+    Memakai generator acak lokal (tidak mengubah seed global).
+    """
+    n = len(y_true)
+    se_model = (p_model - y_true) ** 2
+    se_ref = (p_ref - y_true) ** 2
+    if n == 0:
+        return 0.0, 0.0
+    length = min(max(int(block_length), 1), n)
+    n_blocks = int(np.ceil(n / length))
+    offsets = np.arange(length)
+    rng = np.random.default_rng(seed)
+    samples: list[np.ndarray] = []
+    done = 0
+    while done < n_boot:
+        size = min(batch, n_boot - done)
+        starts = rng.integers(0, n - length + 1, size=(size, n_blocks))
+        idx = (starts[:, :, None] + offsets[None, None, :]).reshape(size, -1)[:, :n]
+        bs_model = se_model[idx].mean(axis=1)
+        bs_ref = se_ref[idx].mean(axis=1)
+        with np.errstate(divide="ignore", invalid="ignore"):
+            samples.append(np.where(bs_ref > 0, 1.0 - bs_model / bs_ref, -np.inf))
+        done += size
+    dist = np.concatenate(samples)
+    return float(np.quantile(dist, alpha)), float(np.quantile(dist, 1.0 - alpha))
+
+
+def pinball_loss(y_true: np.ndarray, q_pred: np.ndarray, tau: float) -> float:
+    diff = y_true - q_pred
+    return float(np.mean(np.maximum(tau * diff, (tau - 1.0) * diff)))
+
+
+def interval_coverage(y_true: np.ndarray, lower: np.ndarray, upper: np.ndarray) -> float:
+    if len(y_true) == 0:
+        return 0.0
+    return float(np.mean((y_true >= lower) & (y_true <= upper)))
+
+
+def wilson_interval(successes: int, n: int, z: float = 1.96) -> tuple[float, float]:
+    if n == 0:
+        return 0.0, 1.0
+    p = successes / n
+    denom = 1.0 + z**2 / n
+    center = (p + z**2 / (2 * n)) / denom
+    margin = z * np.sqrt(p * (1 - p) / n + z**2 / (4 * n**2)) / denom
+    return float(center - margin), float(center + margin)

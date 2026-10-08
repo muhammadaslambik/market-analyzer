@@ -112,3 +112,19 @@ def compute_confluence_features(df: pd.DataFrame) -> pd.DataFrame:
     features["confluence_score"] = np.clip(features["confluence_score"], -100.0, 100.0)
 
     return features
+
+
+WARMUP_ROWS = 250  # EMA 200 dan ATR butuh masa pemanasan; baris awal dibuang saat evaluasi
+VOL_ALPHA = 0.06  # EWMA volatilitas gaya RiskMetrics (lambda = 0,94)
+
+
+def compute_momentum_sign(df: pd.DataFrame, horizon: int) -> pd.Series:
+    """Tanda return `horizon` candle terakhir (kausal: hanya memakai data sampai waktu t)."""
+    past_return = df["close"] / df["close"].shift(horizon) - 1.0
+    return np.sign(past_return)
+
+
+def compute_volatility(df: pd.DataFrame, alpha: float = VOL_ALPHA) -> pd.Series:
+    """Volatilitas EWMA dari log-return 1 candle (kausal)."""
+    log_return = np.log(df["close"] / df["close"].shift(1))
+    return np.sqrt((log_return**2).ewm(alpha=alpha, adjust=False, min_periods=20).mean())

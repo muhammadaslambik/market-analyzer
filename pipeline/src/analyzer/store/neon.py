@@ -143,6 +143,34 @@ class NeonStore:
         self._conn.commit()
         return written
 
+    def insert_model_run(
+        self,
+        version: str,
+        market: str,
+        symbol: str,
+        timeframe: str,
+        horizon: str,
+        metrics: dict[str, Any],
+        passed_gate: bool,
+        artifact: dict[str, Any],
+    ) -> None:
+        self._conn.execute(
+            "INSERT INTO model_runs "
+            "(version, market, symbol, timeframe, horizon, metrics_json, passed_gate, artifact) "
+            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+            (
+                version,
+                market,
+                symbol,
+                timeframe,
+                horizon,
+                Jsonb(metrics),
+                passed_gate,
+                Jsonb(artifact),
+            ),
+        )
+        self._conn.commit()
+
     def log_run(
         self,
         job: str,
